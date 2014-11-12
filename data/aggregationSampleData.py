@@ -1,14 +1,16 @@
+from enum import Enum
+
 class Vote(Enum):
     U = 1
     D = 2
 
 
 sample_votes_1 = [
-    (D, "Hello world"),
-    (D, "Hello world"),
-    (U, "This isn't CIS 110"),
-    (U, "I'm having way too much fun with this"),
-    (U, "Hello world"),
+    (Vote.D, "Hello world"),
+    (Vote.D, "Hello world"),
+    (Vote.U, "This isn't CIS 110"),
+    (Vote.U, "I'm having way too much fun with this"),
+    (Vote.U, "Hello world"),
 ]
 
 output_1 = {
@@ -18,16 +20,16 @@ output_1 = {
 }
 
 sample_votes_2 = [
-    (U, "i love rap, cause it da best"),
-    (D, "I plan to become a productive member of society one day"),
-    (D, "school is cool"),
-    (U, "school is cool"),
-    (U, "school is cool"),
-    (D, "school is cool"),
-    (U, "i love rap, cause it da best"),
-    (U, "what is down homeslice"),
-    (U, "i love rap, cause it da best"),
-    (D, "I plan to become a productive member of society one day"),
+    (Vote.U, "i love rap, cause it da best"),
+    (Vote.D, "I plan to become a productive member of society one day"),
+    (Vote.D, "school is cool"),
+    (Vote.U, "school is cool"),
+    (Vote.U, "school is cool"),
+    (Vote.D, "school is cool"),
+    (Vote.U, "i love rap, cause it da best"),
+    (Vote.U, "what is down homeslice"),
+    (Vote.U, "i love rap, cause it da best"),
+    (Vote.D, "I plan to become a productive member of society one day"),
 ]
 
 output_2 = {
