@@ -5,7 +5,7 @@ sample_aggregated_votes_1 = {
     "I'm having way too much fun with this": (2, 0),
 }
 
-output_1 = "Hello world"
+output_1 = "I'm having way too much fun with this"
 
 
 sample_aggregated_votes_2 = {
