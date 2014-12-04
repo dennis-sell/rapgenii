@@ -1,4 +1,6 @@
 import os
+from flask_oauthlib.client import OAuth, OAuthException
+
 
 # Get application base dir.
 _basedir = os.path.abspath(os.path.dirname(__file__))

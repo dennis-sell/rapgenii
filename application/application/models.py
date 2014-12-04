@@ -2,6 +2,7 @@ from application import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    fb_id = db.Column(db.Integer)
     username = db.Column(db.String(80), unique=True)
     rapGodPoints = db.Column(db.Integer, default=0)
 
