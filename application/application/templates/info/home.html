@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="span8 offset2">
+    <div class="centered">
+      <h1>Home</h1>
+    </div>
+
+    <div id="content">
+        <form method="post" action="/add_rap">
+            <fieldset>
+                <legend>Add Rap</legend>
+                <input type="text" placeholder="The coolest name ever!" name='rap'><br>
+                <button type="submit" class="btn">Submit</button>
+            </fieldset>
+        </form>
+            </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %}
+  <script>
+    $(document).ready(homeView.init);
+  </script>
+{% endblock %}

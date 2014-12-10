@@ -13,6 +13,41 @@ def index():
         return render_template('info/hello.html', username=escape(session['username']))
     return render_template('info/index.html', title='Stress Reliever')
 
+
+@app.route('/home/')
+def home():
+    return render_template("info/home.html", title="Home")
+
+@app.route('/raps/<int:rapID>')
+def show_rap(rapID):
+    rap = Rap.query.filter(Rap.id == rapID)
+    lines = Line.query.filter(Line.rapID == rapID)
+    return render_template("info/rap.html", rap=rap, lines=lines)
+
+@app.route('/add_rap', methods=['POST'])
+def add_rap():
+    print 'hello'
+    print request.form['rap']
+    print db
+    try:
+        r = Rap(request.form['rap'], False)
+        db.session.add(r)
+        db.session.commit()
+        return jsonify(success=True)
+    except:
+        return jsonify(success=False)
+
+@app.route('/add_line', methods=['POST'])
+def add_line():
+    try:
+        l = Line(request.form['line'], escape(session['username']))
+        db.session.add(l)
+        db.session.commit()
+        return jsonify(success=True)
+    except:
+        return jsonify(success=False)
+
+
 @app.route('/login')
 def login():
     callback = url_for('facebook_authorized',
