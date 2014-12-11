@@ -49,6 +49,17 @@ def add_line():
     except:
         return jsonify(success=False)
 
+# THIS IS THE ROUTE I AM USING FOR THE UPVOTES
+
+@app.route('/line/upvote/ajax', methods=['POST', 'GET'])
+def upvote_ajax():
+    if request.method == 'POST':
+        lineID = request.json['lineID']
+        line = Line.query.get(lineID)
+        line.upvote += 1
+        db.session.commit()
+        return jsonify(lineID=lineID)
+
 
 @app.route('/login')
 def login():

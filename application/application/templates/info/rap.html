@@ -6,21 +6,54 @@
     <div class="centered">
       <h1>{{ rap.title }}</h1>
     </div>
-    <form method="post" action="/add_line">
-      <fieldset>
-        <legend>Contribute to the rap!</legend>
-        <label>Add two lines:</label>
-        <input type="text" placeholder="Line 1" name='line1'><br>
-        <input type="text" placeholder="Line 2" name='line2'><br>
-        <input type="hidden" value="{{ rap.id }}" name='rapID'><br>
-        <button type="submit" class="btn">Submit</button>
-      </fieldset>
-    </form>
-    <hr>
-    {% for line in lines %}
-      {{ line.line1 }}<br>
-      {{ line.line2 }}<br>
-    {% endfor %}
+    <div class="row">
+      <div class="span4">
+        <h3>Accepted Lines</h3>
+      </div>
+      <div class="span4">
+        <h3>Pending Lines</h3>
+        {% for line in lines %}
+          <div class="line-container">
+            {{ line.line1 }}<br>
+            {{ line.line2 }}<br>
+            <span class="gray">
+              <em> Submitted by _____ ({{ line.upvotes }}, {{ line.downvotes }})</em>
+              <i class="icon-arrow-up up"></i>
+              <i class="icon-arrow-down down"></i>
+            </span>
+            <br>
+          </div>
+
+          <!-- Here is the javascript I am using. it is inside the for loop because I didn't know how else to send the correct lineID to be updated.
+          -->
+          <script>
+            $('.up').click(function () {
+              $.ajax({
+                type: "POST"
+                contentType: "application/json; charset=utf-8",
+                url: "/line/upvote/ajax",
+                data: JSON.stringify({lineID: {{ line.id }} }),
+                success: function (data) {
+                  console.log(data.line);
+                },
+                dataType: "json"
+              });
+            });
+          </script>
+
+        {% endfor %}    
+        <hr>
+        <form method="post" action="/add_line">
+          <fieldset>
+            <h4>Submit your own line</h4>
+            <input type="hidden" value="{{ rap.id }}" name='rapID'><br>
+            <input type="text" placeholder="Line 1" name='line1'><br>
+            <input type="text" placeholder="Line 2" name='line2'><br>
+            <button type="submit" class="btn">Submit</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 

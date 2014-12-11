@@ -26,3 +26,11 @@ html, body {
 #footer {
   background: none;
 }
+
+.line-container {
+  padding-bottom: 10px;
+}
+
+.gray {
+  color: gray;
+}
