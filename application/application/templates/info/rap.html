@@ -6,6 +6,21 @@
     <div class="centered">
       <h1>{{ rap.title }}</h1>
     </div>
+    <form method="post" action="/add_line">
+      <fieldset>
+        <legend>Contribute to the rap!</legend>
+        <label>Add two lines:</label>
+        <input type="text" placeholder="Line 1" name='line1'><br>
+        <input type="text" placeholder="Line 2" name='line2'><br>
+        <input type="hidden" value="{{ rap.id }}" name='rapID'><br>
+        <button type="submit" class="btn">Submit</button>
+      </fieldset>
+    </form>
+    <hr>
+    {% for line in lines %}
+      {{ line.line1 }}<br>
+      {{ line.line2 }}<br>
+    {% endfor %}
   </div>
 </div>
 

@@ -10,40 +10,42 @@ from __init__ import facebook
 @app.route('/index/')
 def index():
     if 'username' in session:
-        return render_template('info/hello.html', username=escape(session['username']))
+        return render_template('info/home.html', username=escape(session['username']))
     return render_template('info/index.html', title='Stress Reliever')
 
 
 @app.route('/home/')
 def home():
-    return render_template("info/home.html", title="Home")
+    unfinRaps = Rap.query.filter(Rap.completed == False).all()
+    finRaps = Rap.query.filter(Rap.completed == True).all()
+    return render_template("info/home.html", title="Home", unfinRaps=unfinRaps, finRaps=finRaps)
 
 @app.route('/raps/<int:rapID>')
 def show_rap(rapID):
-    rap = Rap.query.filter(Rap.id == rapID)
-    lines = Line.query.filter(Line.rapID == rapID)
+    rap = Rap.query.filter(Rap.id == rapID).first()
+    lines = Line.query.filter(Line.rapID == rapID).all()
     return render_template("info/rap.html", rap=rap, lines=lines)
 
 @app.route('/add_rap', methods=['POST'])
 def add_rap():
-    print 'hello'
-    print request.form['rap']
-    print db
     try:
-        r = Rap(request.form['rap'], False)
+        r = Rap(request.form['rap'])
         db.session.add(r)
         db.session.commit()
-        return jsonify(success=True)
+        return redirect(url_for('home'))
     except:
         return jsonify(success=False)
 
 @app.route('/add_line', methods=['POST'])
 def add_line():
+    index = 1 + 2*len(Line.query.filter(Line.rapID == request.form['rapID'], Line.isPending == False).all())
+    rapID = request.form['rapID']
     try:
-        l = Line(request.form['line'], escape(session['username']))
+        l = Line(request.form['line1'], request.form['line2'], 
+            request.form['rapID'], index, escape(session['user_id'])) 
         db.session.add(l)
         db.session.commit()
-        return jsonify(success=True)
+        return redirect(url_for('show_rap', rapID = rapID))
     except:
         return jsonify(success=False)
 
@@ -69,6 +71,7 @@ def facebook_authorized():
 
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
+    session['user_id'] = me.data["id"]
     print me.data
     if not User.query.filter_by(fb_id=me.data['id']):
         email = me.data['email'].split("@")[0]

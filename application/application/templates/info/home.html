@@ -3,19 +3,32 @@
 
 <div class="row">
   <div class="span8 offset2">
-    <div class="centered">
-      <h1>Home</h1>
-    </div>
+    
 
     <div id="content">
         <form method="post" action="/add_rap">
             <fieldset>
-                <legend>Add Rap</legend>
-                <input type="text" placeholder="The coolest name ever!" name='rap'><br>
-                <button type="submit" class="btn">Submit</button>
+              <legend>Add New Rap</legend>
+              <input type="text" placeholder="The coolest name ever!" name='rap'><br>
+              <button type="submit" class="btn">Submit</button>
             </fieldset>
         </form>
-            </div>
+        <hr>
+        <div class="row">
+          <div class="span4 ">
+            <h2>Ongoing Raps</h2>
+            {% for rap in unfinRaps %}
+                <a href="{{ url_for('show_rap', rapID = rap.id) }}">{{ rap.title }}</a><br>
+            {% endfor %}
+          </div>
+          <div class="span4">
+            <h2>Finished Raps</h2>
+            {% for rap in finRaps %}
+                <a href="{{ url_for('show_rap', rapID = rap.id) }}">{{ rap.title }}</a><br>
+            {% endfor %}
+          </div>
+        </div>
+    </div>
   </div>
 </div>
 

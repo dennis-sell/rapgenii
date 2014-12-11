@@ -35,18 +35,16 @@ class Line(db.Model):
     lineIndex = db.Column(db.Integer)
 
     userID = db.Column(db.Integer)
-    owner = db.Column(db.String(80))
 
     upvotes = db.Column(db.Integer, default=0)
     downvotes = db.Column(db.Integer, default=0)
 
-    def __init__(self, line1, line2, lineIndex, rapID, userID, owner):
+    def __init__(self, line1, line2, lineIndex, rapID, userID):
         self.line1 = line1
         self.line2 = line2
         self.lineIndex = lineIndex
         self.rapID = rapID
         self.userID = userID
-        self.owner = owner
 
     def __repr__(self):
         return '<Lines %r\n\t%r>' % (self.line1, self.line2)
