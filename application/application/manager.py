@@ -41,8 +41,8 @@ def add_line():
     index = 1 + 2*len(Line.query.filter(Line.rapID == request.form['rapID'], Line.isPending == False).all())
     rapID = request.form['rapID']
     try:
-        l = Line(request.form['line1'], request.form['line2'], 
-            request.form['rapID'], index, escape(session['user_id'])) 
+        l = Line(request.form['line1'], request.form['line2'],
+            request.form['rapID'], index, escape(session['user_id']))
         db.session.add(l)
         db.session.commit()
         return redirect(url_for('show_rap', rapID = rapID))
@@ -51,15 +51,31 @@ def add_line():
 
 # THIS IS THE ROUTE I AM USING FOR THE UPVOTES
 
-@app.route('/line/upvote/ajax', methods=['POST', 'GET'])
+@app.route('/line/_upvote', methods=['POST', 'GET'])
 def upvote_ajax():
     if request.method == 'POST':
-        lineID = request.json['lineID']
+        lineID = request.form['lineID']
         line = Line.query.get(lineID)
-        line.upvote += 1
-        db.session.commit()
+        line.upvotes += 1
+        current_user = User.query.filter_by(fb_id=session['user_id']).first()
+        if (line in current_user.lines):
+            current_user.lines.append(line)
+            db.session.add(current_user)
+            db.session.commit()
         return jsonify(lineID=lineID)
 
+@app.route('/line/_downvote', methods=['POST', 'GET'])
+def downvote_ajax():
+    if request.method == 'POST':
+        lineID = request.form['lineID']
+        line = Line.query.get(lineID)
+        line.downvotes += 1
+        current_user = User.query.filter_by(fb_id=session['user_id']).first()
+        if (line in current_user.lines):
+            current_user.lines.append(line)
+            db.session.add(current_user)
+            db.session.commit()
+        return jsonify(lineID=lineID)
 
 @app.route('/login')
 def login():
@@ -83,10 +99,11 @@ def facebook_authorized():
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
     session['user_id'] = me.data["id"]
-    print me.data
-    if not User.query.filter_by(fb_id=me.data['id']):
+    print "hello"
+    if not User.query.filter_by(fb_id=me.data['id']).first():
+        print "got here"
         email = me.data['email'].split("@")[0]
-        u = User(me.data['id'], email, 0)
+        u = User(me.data['id'], email)
         db.session.add(u)
         db.session.commit()
     return 'Logged in as id=%s name=%s redirect=%s' % \

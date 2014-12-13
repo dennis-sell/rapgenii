@@ -1,13 +1,22 @@
 from application import db
 
+lines = db.Table('tags',
+    db.Column('line_id', db.Integer, db.ForeignKey('line.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fb_id = db.Column(db.Integer)
     username = db.Column(db.String(80), unique=True)
     rapGodPoints = db.Column(db.Integer, default=0)
+    lines = db.relationship('Line', secondary=lines,
+        backref=db.backref('users', lazy='dynamic'))
 
-    def __init__(self, username):
+    def __init__(self, fb_id, username):
         self.username = username
+        self.fb_id = fb_id
 
     def __repr__(self):
         return '<User %r>' % (self.username)
