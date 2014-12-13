@@ -4,6 +4,7 @@ from application.models import *
 from flask import Flask, session, redirect, url_for, escape, request
 from flask_oauthlib.client import OAuth, OAuthException
 import random
+import quality_control
 from __init__ import facebook
 
 @app.route('/')
@@ -23,8 +24,13 @@ def home():
 @app.route('/raps/<int:rapID>')
 def show_rap(rapID):
     rap = Rap.query.filter(Rap.id == rapID).first()
-    lines = Line.query.filter(Line.rapID == rapID).all()
-    return render_template("info/rap.html", rap=rap, lines=lines)
+    pending_lines = Line.query.filter(Line.rapID == rapID) \
+                               .filter(Line.isPending == True).all()
+    pending_lines = quality_control.sort_lines_by_wilson_score(pending_lines)
+
+    accepted_lines = Line.query.filter(Line.rapID == rapID) \
+                               .filter(Line.isPending == False).all()
+    return render_template("info/rap.html", rap=rap, lines=pending_lines)
 
 @app.route('/add_rap', methods=['POST'])
 def add_rap():
