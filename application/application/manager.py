@@ -10,8 +10,8 @@ import urllib2
 
 @app.route('/')
 def home():
-    unfinRaps = Rap.query.filter(Rap.completed == False).all()
-    finRaps = Rap.query.filter(Rap.completed == True).all()
+    unfinRaps = Rap.query.filter(Rap.completed == False).limit(3).all()
+    finRaps = Rap.query.filter(Rap.completed == True).limit(3).all()
     user = None
     if 'user_id' in session:
         user = User.query.filter_by(fb_id=session['user_id']).first()

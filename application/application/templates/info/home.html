@@ -37,16 +37,20 @@
             <a href="{{ url_for('show_rap', rapID = rap.id) }}">{{ rap.title }}:{{rap.progress}}/{{rap.max_length}}</a><br>
             {% endfor %}
           </div>
-          <div class="span4">
-            <h2>Finished Raps</h2>
-            {% for rap in finRaps %}
-                <a href="{{ url_for('show_rap', rapID = rap.id) }}">{{ rap.title }}</a><br>
-            {% endfor %}
+        {% endfor %}
+      </div>
+      <div class="row">
+        <h1><b>Finished Raps</b></h1>
+        {% for rap in finRaps %}
+          <div class="col-md-4">
+            <a href="{{ url_for('show_rap', rapID = rap.id) }}">{{ rap.title }}</a><br>
           </div>
-        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>
+
 
 
 {% endblock %}
