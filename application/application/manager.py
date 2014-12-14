@@ -65,7 +65,7 @@ def upvote_ajax():
         line = Line.query.get(lineID)
         line.upvotes += 1
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
-        if (current_user and line in current_user.lines):
+        if (current_user and line not in current_user.lines):
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
@@ -80,7 +80,7 @@ def downvote_ajax():
         line = Line.query.get(lineID)
         line.downvotes += 1
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
-        if (line in current_user.lines):
+        if (current_user and line not in current_user.lines):
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
