@@ -29,8 +29,9 @@ class Rap(db.Model):
     title = db.Column(db.String(80), unique=True)
     completed = db.Column(db.Boolean, default=False)
     max_length = db.Column(db.Integer)
+    progress = db.Column(db.Integer, default=0)
 
-    def __init__(self, title, max_length=20):
+    def __init__(self, title, max_length):
         self.title = title
         self.max_length = max_length
 
@@ -61,6 +62,7 @@ class Line(db.Model):
 
     def __repr__(self):
         return '<Lines %r\n\t%r>' % (self.line1, self.line2)
+
 
 
 class Question(db.Model):

@@ -52,7 +52,8 @@ def show_rap(rapID):
 def add_rap():
     try:
         if session['user_id']:
-            r = Rap(request.form['rap'])
+            print request.form['rap_length']
+            r = Rap(request.form['rap'], request.form['rap_length'])
             db.session.add(r)
             db.session.commit()
         return redirect(url_for('home'))
@@ -138,6 +139,7 @@ def select_best_line(line):
         best_line.isPending = False
         owner = User.query.filter_by(fb_id=best_line.userID).first()
         owner.rapGodPoints += 10
+        rap.progress += 2
         db.session.add(best_line)
         db.session.commit()
         # finishes the rap if it reaches the max length
@@ -191,6 +193,8 @@ def logout():
 def profile(userID):
     user = User.query.filter_by(id=userID).first()
     lines = Line.query.filter_by(userID=user.fb_id, isPending=False)
-    return render_template("info/profile.html", user=user, lines=lines)
+    pending = Line.query.filter_by(userID=user.fb_id, isPending=True)
+    return render_template("info/profile.html", pending=pending, user=user,
+                           lines=lines)
 
 

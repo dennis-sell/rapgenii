@@ -11,6 +11,13 @@
             <fieldset>
               <legend>Add New Rap</legend>
               <input type="text" placeholder="The coolest name ever!" name='rap'><br>
+              <label for="rap length">Total Rap Line Number</label>
+              <select name="rap_length" class="form-control">
+                <option>16</option>
+                <option>32</option>
+                <option>64</option>
+                <option>128</option>
+              </select>     
               <button type="submit" class="btn">Submit</button>
             </fieldset>
         </form>
@@ -30,7 +37,7 @@
           <div class="span4 ">
             <h2>Ongoing Raps</h2>
             {% for rap in unfinRaps %}
-                <a href="{{ url_for('show_rap', rapID = rap.id) }}">{{ rap.title }}</a><br>
+            <a href="{{ url_for('show_rap', rapID = rap.id) }}">{{ rap.title }}:{{rap.progress}}/{{rap.max_length}}</a><br>
             {% endfor %}
           </div>
           <div class="span4">
