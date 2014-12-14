@@ -10,6 +10,12 @@
       <div class="span4">
         <h3>Accepted Lines</h3>
         {% for line in accepted_lines %}
+          <div class="line-container">
+            <div class="votes" id="{{ line.id}} ">
+              {{ line.line1 }}<br/>
+              {{ line.line2 }}<br/>
+            </div>
+          </div>
         {% endfor %}
       </div>
       <div class="span4">

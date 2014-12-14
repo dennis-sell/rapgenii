@@ -45,7 +45,8 @@ def add_rap():
 
 @app.route('/add_line', methods=['POST'])
 def add_line():
-    index = 1 + 2*len(Line.query.filter(Line.rapID == request.form['rapID'], Line.isPending == False).all())
+    index = 1 + 2*len(Line.query.filter(Line.rapID == request.form['rapID'],
+                                        Line.isPending == False).all())
     rapID = request.form['rapID']
     try:
         l = Line(request.form['line1'], request.form['line2'],
