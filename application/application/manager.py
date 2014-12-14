@@ -64,13 +64,18 @@ def upvote_ajax():
     if request.method == 'POST':
         lineID = request.form['lineID']
         line = Line.query.get(lineID)
-        line.upvotes += 1
+        print "hi"
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
         if (current_user and line not in current_user.lines):
+            line.upvotes += 1
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
-            return jsonify(lineID=lineID)
+            total_votes = line.upvotes + line.downvotes
+            print total_votes
+            if total_votes >= 1:
+                select_best_line(line)
+            return redirect(url_for('show_rap', rapID=line.rapID))
         else:
             return redirect(url_for('home'))
 
@@ -80,39 +85,19 @@ def downvote_ajax():
     if request.method == 'POST':
         lineID = request.form['lineID']
         line = Line.query.get(lineID)
-        line.downvotes += 1
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
         if (current_user and line not in current_user.lines):
+            line.downvotes += 1
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
-            return jsonify(lineID=lineID)
+            total_votes = line.upvotes + line.downvotes
+            if total_votes >= 1:
+                select_best_line(line)
+            return redirect(url_for('show_rap', rapID=line.rapID))
         else:
             return redirect(url_for('home'))
 
-
-@app.route('/add_line', methods=['POST'])
-def select_best_line():
-    if request.method == 'POST':
-        rapID = request.form['rapID']
-        rap = Rap.query.get(rapID)
-        pending_lines = pending_lines(rapID)
-        best_line, other_lines = quality_control.best_line(pending_lines)
-        if best_line:
-            best_line.isPending = False
-            db.session.remove(other_lines)
-            """ Can you remove a list? If not
-            for line in other_lines:
-                db.session.remove(line)
-            """
-            db.session.add(best_line)
-            # finishes the line if it reaches the max length
-            current_length = len(accepted_lines(rapID)) + 2
-            #Plus 2, because the lines that we just added haven't been placed in the database
-            if current_length >= rap.max_length:
-                rap.completed = True
-                db.session.add(rap)
-            db.session.commit()
 
 
 def accepted_lines(rapID):
@@ -122,6 +107,25 @@ def accepted_lines(rapID):
 def pending_lines(rapID):
     return Line.query.filter(Line.rapID == rapID) \
                      .filter(Line.isPending == True).all()
+
+def select_best_line(line):
+    rapID = line.rapID
+    rap = Rap.query.get(rapID)
+    all_pending_lines = pending_lines(rapID)
+    best_line, other_lines = quality_control.best_line(all_pending_lines)
+    best_line = best_line[1]
+    if best_line:
+        for line in other_lines:
+            db.session.delete(line[1])
+        best_line.isPending = False
+        db.session.add(best_line)
+        db.session.commit()
+        # finishes the rap if it reaches the max length
+        current_length = len(accepted_lines(rapID))
+        if current_length >= rap.max_length:
+            rap.completed = True
+            db.session.add(rap)
+            db.session.commit()
 
 @app.route('/login')
 def login():
