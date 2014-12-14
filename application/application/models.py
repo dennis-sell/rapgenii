@@ -8,13 +8,15 @@ lines = db.Table('tags',
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(100))
     fb_id = db.Column(db.Integer)
     username = db.Column(db.String(80), unique=True)
     rapGodPoints = db.Column(db.Integer, default=0)
     lines = db.relationship('Line', secondary=lines,
         backref=db.backref('users', lazy='dynamic'))
 
-    def __init__(self, fb_id, username):
+    def __init__(self, full_name, fb_id, username):
+        self.full_name = full_name
         self.username = username
         self.fb_id = fb_id
 

@@ -7,7 +7,7 @@
   
     <div id="content">
         {% if user %}
-        <h2> hello {{ user.username}} </h2>
+        <h2> hello {{ user.full_name}} </h2>
         <form method="post" action="/add_rap">
             <fieldset>
               <legend>Add New Rap</legend>
