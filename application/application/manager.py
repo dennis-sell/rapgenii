@@ -205,11 +205,16 @@ def profile(userID):
 @app.route('/unfinished')
 def unfinished():
     raps = Rap.query.filter_by(completed=False).all()
-    return render_template("info/unfinished.html", raps=raps)
+    current_user = User.query.filter_by(fb_id=session['user_id']).first()
+    return render_template("info/unfinished.html", raps=raps, user=current_user)
 
 @app.route("/finished")
 def finished():
     raps = Rap.query.filter_by(completed=True).all()
-    return render_template("info/finished.html", raps=raps)
+    current_user = User.query.filter_by(fb_id=session['user_id']).first()
+    return render_template("info/finished.html", raps=raps, user=current_user)
 
-
+@app.route("/about")
+def about():
+    current_user = User.query.filter_by(fb_id=session['user_id']).first()
+    return render_template("info/about.html", user=current_user)

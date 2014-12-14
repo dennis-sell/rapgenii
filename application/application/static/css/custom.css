@@ -45,6 +45,10 @@ body {
   padding-right: 20px;
 }
 
+.super-title {
+  font-size: 5em;
+}
+
 
 /* home page */
 
@@ -53,6 +57,7 @@ body {
   height: 150px;
   background-color: #f2f2f2;
   padding: 35px;
+  margin-bottom: 30px;
 }
 
 .rap-container a{
