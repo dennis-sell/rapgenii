@@ -4,8 +4,10 @@
 <div class="row">
   <div class="span8 offset2">
     
-
+  
     <div id="content">
+        {% if user %}
+        <h2> hello {{ user.username}} </h2>
         <form method="post" action="/add_rap">
             <fieldset>
               <legend>Add New Rap</legend>
@@ -13,6 +15,12 @@
               <button type="submit" class="btn">Submit</button>
             </fieldset>
         </form>
+        {% else %}
+        <div id="login">
+          <p>Want to add your own rap?</p>
+          <a href="/login">Login with Facebook</a>
+        </div>
+        {% endif %}
         <hr>
         <div class="row">
           <div class="span4 ">

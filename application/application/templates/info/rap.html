@@ -18,13 +18,16 @@
               {{ line.line1 }}<br/>
               {{ line.line2 }}<br/>
               <em> Submitted by _____ ({{ line.upvotes }}, {{ line.downvotes }})</em>
+              {% if user %}
               <a class="icon-arrow-up up"></a>
               <a class="icon-arrow-down down"></a>
+              {% endif %}
               <br/>
             </div>
           </div>
         {% endfor %}    
         <hr>
+        {% if user %}
         <form method="post" action="/add_line">
           <fieldset>
             <h4>Submit your own line</h4>
@@ -34,6 +37,7 @@
             <button type="submit" class="btn">Submit</button>
           </fieldset>
         </form>
+        {% endif %}
       </div>
     </div>
   </div>

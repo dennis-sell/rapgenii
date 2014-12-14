@@ -7,31 +7,30 @@ import random
 from __init__ import facebook
 
 @app.route('/')
-@app.route('/index/')
-def index():
-    if 'username' in session:
-        return render_template('info/home.html', username=escape(session['username']))
-    return render_template('info/index.html', title='Stress Reliever')
-
-
-@app.route('/home/')
 def home():
     unfinRaps = Rap.query.filter(Rap.completed == False).all()
     finRaps = Rap.query.filter(Rap.completed == True).all()
-    return render_template("info/home.html", title="Home", unfinRaps=unfinRaps, finRaps=finRaps)
+    user = None
+    if 'user_id' in session:
+        user = User.query.filter_by(fb_id=session['user_id']).first()
+    return render_template("info/home.html", title="Home", user = user, unfinRaps=unfinRaps, finRaps=finRaps)
 
 @app.route('/raps/<int:rapID>')
 def show_rap(rapID):
     rap = Rap.query.filter(Rap.id == rapID).first()
     lines = Line.query.filter(Line.rapID == rapID).all()
-    return render_template("info/rap.html", rap=rap, lines=lines)
+    user = None
+    if 'user_id' in session:
+        user = User.query.filter_by(fb_id=session['user_id']).first()
+    return render_template("info/rap.html", user=user, rap=rap, lines=lines)
 
 @app.route('/add_rap', methods=['POST'])
 def add_rap():
     try:
-        r = Rap(request.form['rap'])
-        db.session.add(r)
-        db.session.commit()
+        if session['user_id']:
+            r = Rap(request.form['rap'])
+            db.session.add(r)
+            db.session.commit()
         return redirect(url_for('home'))
     except:
         return jsonify(success=False)
@@ -58,11 +57,13 @@ def upvote_ajax():
         line = Line.query.get(lineID)
         line.upvotes += 1
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
-        if (line in current_user.lines):
+        if (current_user and line in current_user.lines):
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
-        return jsonify(lineID=lineID)
+            return jsonify(lineID=lineID)
+        else:
+            return redirect(url_for('home'))
 
 @app.route('/line/_downvote', methods=['POST', 'GET'])
 def downvote_ajax():
@@ -75,7 +76,9 @@ def downvote_ajax():
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
-        return jsonify(lineID=lineID)
+            return jsonify(lineID=lineID)
+        else:
+            return redirect(url_for('home'))
 
 @app.route('/login')
 def login():
@@ -102,7 +105,7 @@ def facebook_authorized():
     print "hello"
     if not User.query.filter_by(fb_id=me.data['id']).first():
         print "got here"
-        email = me.data['email'].split("@")[0]
+        email = me.data['email']
         u = User(me.data['id'], email)
         db.session.add(u)
         db.session.commit()
