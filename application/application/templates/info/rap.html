@@ -20,14 +20,14 @@
         </div>
       </div>
     {% endfor %}
-    {% if not rap.complete %}
+    {% if not rap.completed %}
     <div class="next-line-box"><b>?</b></div>
     {% endif %}
   </div>
   </div>
   <div class="col-md-6 pending-container">
     <div class="pending-wrap">
-    {% if not rap.complete %}
+    {% if not rap.completed %}
       {% if user %}
       <h1>Proposed Lines</h1>
       <form role="form" method="post" action="/add_line">

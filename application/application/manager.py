@@ -202,4 +202,14 @@ def profile(userID):
     return render_template("info/profile.html", pending=pending, user=user,
                            lines=lines)
 
+@app.route('/unfinished')
+def unfinished():
+    raps = Rap.query.filter_by(completed=False).all()
+    return render_template("info/unfinished.html", raps=raps)
+
+@app.route("/finished")
+def finished():
+    raps = Rap.query.filter_by(completed=True).all()
+    return render_template("info/finished.html", raps=raps)
+
 
