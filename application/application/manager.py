@@ -29,8 +29,10 @@ def show_rap(rapID):
     pending_lines = quality_control.sort_lines_by_wilson_score(pending_lines)
 
     accepted_lines = Line.query.filter(Line.rapID == rapID) \
-                               .filter(Line.isPending == False).all()
-    return render_template("info/rap.html", rap=rap, lines=pending_lines)
+                               .filter(Line.isPending == False) \
+                               .order_by(Line.lineIndex.asc()).all()
+    return render_template("info/rap.html", rap=rap, pending_lines=pending_lines,
+                                                     accepted_lines=accepted_lines)
 
 @app.route('/add_rap', methods=['POST'])
 def add_rap():
@@ -48,7 +50,7 @@ def add_line():
     rapID = request.form['rapID']
     try:
         l = Line(request.form['line1'], request.form['line2'],
-            request.form['rapID'], index, escape(session['user_id']))
+            index, request.form['rapID'], escape(session['user_id']))
         db.session.add(l)
         db.session.commit()
         return redirect(url_for('show_rap', rapID = rapID))
@@ -82,6 +84,9 @@ def downvote_ajax():
             db.session.add(current_user)
             db.session.commit()
         return jsonify(lineID=lineID)
+
+def select_line():
+  pass
 
 @app.route('/login')
 def login():

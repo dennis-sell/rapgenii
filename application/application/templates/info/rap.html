@@ -9,10 +9,12 @@
     <div class="row">
       <div class="span4">
         <h3>Accepted Lines</h3>
+        {% for line in accepted_lines %}
+        {% endfor %}
       </div>
       <div class="span4">
         <h3>Pending Lines</h3>
-        {% for line in lines %}
+        {% for line in pending_lines %}
           <div class="line-container">
             <div class="votes" id="{{ line.id}} ">
               {{ line.line1 }}<br/>
