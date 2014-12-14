@@ -53,6 +53,9 @@ def add_rap():
     try:
         if session['user_id']:
             print request.form['rap_length']
+            if (not request.form['rap']) or (not request.form['rap_length']):
+                return jsonify(success=False)
+
             r = Rap(request.form['rap'], request.form['rap_length'])
             db.session.add(r)
             db.session.commit()
@@ -66,6 +69,9 @@ def add_line():
                                         Line.isPending == False).all())
     rapID = request.form['rapID']
     try:
+        if (not request.form['line1']) or (not request.form['line2']):
+            return jsonify(success=False)
+
         l = Line(request.form['line1'], request.form['line2'],
             index, request.form['rapID'], escape(session['user_id']))
         db.session.add(l)
@@ -143,8 +149,7 @@ def select_best_line(line):
         db.session.add(best_line)
         db.session.commit()
         # finishes the rap if it reaches the max length
-        current_length = len(accepted_lines(rapID))
-        if current_length >= rap.max_length:
+        if rap.progress >= rap.max_length:
             rap.completed = True
             db.session.add(rap)
             db.session.commit()
