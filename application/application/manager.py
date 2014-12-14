@@ -147,46 +147,18 @@ def facebook_authorized():
     session['user_id'] = me.data["id"]
     if not User.query.filter_by(fb_id=me.data['id']).first():
         email = me.data['email']
-        full_name = me.data['first_name'] + " " + me.data['last_name']
-        u = User(full_name, me.data['id'], email)
+        u = User(me.data['name'], me.data['id'], email)
         db.session.add(u)
         db.session.commit()
-    return 'Logged in as id=%s name=%s redirect=%s' % \
-        (me.data['id'], me.data['name'], request.args.get('next'))
+    return redirect(url_for('home'))
 
 
 @facebook.tokengetter
 def get_facebook_oauth_token():
     return session.get('oauth_token')
 
-# @app.route('/add_post', methods=['POST'])
-# def add_question():
-#     try:
-#         q = Question(request.form['question'], escape(session['username']))
-#         db.session.add(q)
-#         db.session.commit()
-#         return jsonify(success=True)
-#     except:
-#         return jsonify(success=False)
-
-# @app.route('/get_stress')
-# def get_stresses():
-#     weights = Question.query.filter(Question.completed==False). \
-#                              filter(Question.owner!=escape(session['username'])).all()
-#     if weights:
-#         final_stress = random.choice(weights)
-#         return jsonify({'question':final_stress.question, 'id' : final_stress.id})
-#     return jsonify({})
-
-# @app.route('/add_response', methods=['POST'])
-# def add_response():
-#     pk = request.form['id']
-#     response = request.form['response']
-#     email_responder = escape(session['username'])
-#     try:
-#         q = Question.query.filter_by(id=pk).first()
-#         q.addAnswer(response, email_responder)
-#         db.session.commit()
-#         return jsonify(success=True)
-#     except:
-#         return jsonify(sucess=False)
+@app.route('/logout')
+def logout():
+    session.pop('oauth_token', None)
+    session.pop('user_id', None)
+    return redirect(url_for('home'))

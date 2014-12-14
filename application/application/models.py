@@ -15,7 +15,8 @@ class User(db.Model):
     lines = db.relationship('Line', secondary=lines,
         backref=db.backref('users', lazy='dynamic'))
 
-    def __init__(self, fb_id, username):
+    def __init__(self, full_name, fb_id, username):
+        self.full_name = full_name
         self.username = username
         self.fb_id = fb_id
 
