@@ -199,7 +199,7 @@ def profile(userID):
     user = User.query.filter_by(id=userID).first()
     lines = Line.query.filter_by(userID=user.fb_id, isPending=False)
     pending = Line.query.filter_by(userID=user.fb_id, isPending=True)
-    return render_template("info/profile.html", pending=pending, user=user,
+    return render_template("info/profile.html", title="Profile", pending=pending, user=user,
                            lines=lines)
 
 @app.route('/unfinished')
@@ -217,4 +217,4 @@ def finished():
 @app.route("/about")
 def about():
     current_user = User.query.filter_by(fb_id=session['user_id']).first()
-    return render_template("info/about.html", title="about", user=current_user)
+    return render_template("info/about.html", title="About", user=current_user)
