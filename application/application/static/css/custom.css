@@ -1,3 +1,7 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 html, body {
   height: 100%;
 }
@@ -19,6 +23,9 @@ html, body {
   width: 70%;
 }
 
+.gold {
+  color: #fcdb23 !important;
+}
 
 .see-all {
   text-align: right;
@@ -95,6 +102,14 @@ a.lyrics {
   cursor:pointer;
   text-decoration: none;
 }
+
+
+/* profile page */
+
+.list-unstyled li {
+  padding-bottom: 10px;
+}
+
 
 /* other */
 
