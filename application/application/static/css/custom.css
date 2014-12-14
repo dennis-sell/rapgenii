@@ -4,6 +4,10 @@ html, body {
 
 /* rap page */
 
+.accepted-container {
+  background-color: #dddddd;
+}
+
 .voted {
   color: #dddddd;
 }

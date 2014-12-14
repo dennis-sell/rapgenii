@@ -2,10 +2,9 @@
 {% block content %}
 
 <div class="row">
-  <div class="span8 offset2">
-    
-  
+
     <div id="content">
+        <span data-toggle="tooltip" data-placement="right" title="Tooltip on right">hello</span>
         {% if user %}
         <h2> hello {{ user.full_name}} </h2>
         <form method="post" action="/add_rap">
@@ -17,8 +16,13 @@
         </form>
         {% else %}
         <div id="login">
-          <p>Want to add your own rap?</p>
-          <a href="/login">Login with Facebook</a>
+          <div class="jumbotron">
+            <div class="container">
+              <h1>Welcome to RapGenii</h1>
+              <p>RapGenii is all about working together to create awesome rap lyrics. Login with Facebook to get started!</p>
+              <p><a class="btn btn-primary btn-lg" href="/login" role="button">Login with Facebook &raquo;</a></p>
+            </div>
+          </div>
         </div>
         {% endif %}
         <hr>
@@ -42,7 +46,5 @@
 
 {% endblock %}
 {% block js %}
-  <script>
-    $(document).ready(homeView.init);
-  </script>
+
 {% endblock %}

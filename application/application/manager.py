@@ -33,16 +33,20 @@ def show_rap(rapID):
             already_voted.append(False)
         user = User.query.filter_by(fb_id=i.userID).first()
         line_users.append((user.full_name,user.id))
+    accepted_line_users = []
     accepted_lines = Line.query.filter(Line.rapID == rapID) \
                                .filter(Line.isPending == False) \
                                .order_by(Line.lineIndex.asc()).all()
+    for i in accepted_lines:
+        user = User.query.filter_by(fb_id=i.userID).first()
+        accepted_line_users.append((user.full_name,user.id))
     user = None
     if 'user_id' in session:
         user = User.query.filter_by(fb_id=session['user_id']).first()
     return render_template("info/rap.html", user=user, rap=rap,
                            already_voted=already_voted,
-                           line_users=line_users, pending_lines=pending_lines,
-                           accepted_lines=accepted_lines)
+                           line_users=line_users, accepted_line_users=accepted_line_users, 
+                           pending_lines=pending_lines, accepted_lines=accepted_lines)
 
 @app.route('/add_rap', methods=['POST'])
 def add_rap():
