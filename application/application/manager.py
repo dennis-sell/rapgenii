@@ -88,8 +88,25 @@ def downvote_ajax():
         else:
             return redirect(url_for('home'))
 
-def select_line():
-  pass
+
+@app.route('/add_line', methods=['POST'])
+def select_best_line():
+    if request.method == 'POST':
+        rapID = request.form['rapID']
+        pending_lines = Line.query.filter(Line.rapID == rapID) \
+                                  .filter(Line.isPending == True).all()
+        best_line, other_lines = quality_control.best_line(pending_lines)
+        if best_line:
+            best_line.isPending = False
+            db.session.remove(other_lines)
+            """ Can you remove a list? If not
+            for line in other_lines:
+                db.session.remove(line)
+            """
+            db.session.add(best_line)
+            # Decides whether the line is finished.
+            db.session.commit()
+
 
 @app.route('/login')
 def login():

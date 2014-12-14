@@ -12,13 +12,13 @@ def wilson_score(upvotes, downvotes):
 
 def sort_lines_by_wilson_score(lines):
     wilson_scores = [(wilson_score(line.upvotes, line.downvotes), line) for line in lines]
-    wilson_scores.sort(reverse=True)
+    wilson_scores.sort(reverse=True) # sorts descendingly
     return [line for (score, line) in wilson_scores]
 
 def best_line(lines):
     if not lines:
-        return None
+        return [], []
     sorted_lines = sort_lines_by_wilson_score(lines)
     # returns line with highest wilson score
-    return wilson_scores[0]
+    return wilson_scores[0], wilson_score[1:]
 
