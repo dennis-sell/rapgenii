@@ -43,7 +43,7 @@ def show_rap(rapID):
     user = None
     if 'user_id' in session:
         user = User.query.filter_by(fb_id=session['user_id']).first()
-    return render_template("info/rap.html", user=user, rap=rap,
+    return render_template("info/rap.html", title=rap.title, user=user, rap=rap,
                            already_voted=already_voted,
                            line_users=line_users, accepted_line_users=accepted_line_users,
                            pending_lines=pending_lines, accepted_lines=accepted_lines)
@@ -206,15 +206,15 @@ def profile(userID):
 def unfinished():
     raps = Rap.query.filter_by(completed=False).all()
     current_user = User.query.filter_by(fb_id=session['user_id']).first()
-    return render_template("info/unfinished.html", raps=raps, user=current_user)
+    return render_template("info/unfinished.html", title="Ongoing Raps", raps=raps, user=current_user)
 
 @app.route("/finished")
 def finished():
     raps = Rap.query.filter_by(completed=True).all()
     current_user = User.query.filter_by(fb_id=session['user_id']).first()
-    return render_template("info/finished.html", raps=raps, user=current_user)
+    return render_template("info/finished.html", title="Finished Raps", raps=raps, user=current_user)
 
 @app.route("/about")
 def about():
     current_user = User.query.filter_by(fb_id=session['user_id']).first()
-    return render_template("info/about.html", user=current_user)
+    return render_template("info/about.html", title="about", user=current_user)
