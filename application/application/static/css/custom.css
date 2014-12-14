@@ -2,10 +2,40 @@ html, body {
   height: 100%;
 }
 
+.navbar{
+  margin: 0px;
+}
+
+.container-custom {
+  padding-left: 200px;
+  min-height: 100%;
+  height: 100%;
+}
+
+.row {
+  height: 100%;
+}
+
+.custom-input {
+  width: 70%;
+}
+
 /* rap page */
 
-.accepted-container {
-  background-color: #dddddd;
+
+.pending-container {
+  background-color: #e7e7e7;
+  min-height: 100%;
+  height: 100%;
+}
+
+.finished-lyrics {
+  font-size: 1.5em;
+}
+
+.next-line-box {
+  width: 300px;
+  height: 50px;
 }
 
 .voted {
@@ -48,7 +78,7 @@ a.lyrics {
 }
 
 .line-container {
-  padding-bottom: 10px;
+  padding-bottom: 3px;
 }
 
 .gray {
@@ -58,3 +88,4 @@ a.lyrics {
 .red {
   color: red;
 }
+
