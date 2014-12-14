@@ -145,11 +145,10 @@ def facebook_authorized():
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
     session['user_id'] = me.data["id"]
-    print "hello"
     if not User.query.filter_by(fb_id=me.data['id']).first():
-        print "got here"
         email = me.data['email']
-        u = User(me.data['id'], email)
+        full_name = me.data['first_name'] + " " + me.data['last_name']
+        u = User(full_name, me.data['id'], email)
         db.session.add(u)
         db.session.commit()
     return 'Logged in as id=%s name=%s redirect=%s' % \
