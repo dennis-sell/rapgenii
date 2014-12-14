@@ -74,6 +74,7 @@ def upvote_ajax():
         else:
             return redirect(url_for('home'))
 
+
 @app.route('/line/_downvote', methods=['POST', 'GET'])
 def downvote_ajax():
     if request.method == 'POST':
@@ -94,8 +95,8 @@ def downvote_ajax():
 def select_best_line():
     if request.method == 'POST':
         rapID = request.form['rapID']
-        pending_lines = Line.query.filter(Line.rapID == rapID) \
-                                  .filter(Line.isPending == True).all()
+        rap = Rap.query.get(rapID)
+        pending_lines = pending_lines(rapID)
         best_line, other_lines = quality_control.best_line(pending_lines)
         if best_line:
             best_line.isPending = False
@@ -105,9 +106,22 @@ def select_best_line():
                 db.session.remove(line)
             """
             db.session.add(best_line)
-            # Decides whether the line is finished.
+            # finishes the line if it reaches the max length
+            current_length = len(accepted_lines(rapID)) + 2
+            #Plus 2, because the lines that we just added haven't been placed in the database
+            if current_length >= rap.max_length:
+                rap.completed = True
+                db.session.add(rap)
             db.session.commit()
 
+
+def accepted_lines(rapID):
+    return Line.query.filter(Line.rapID == rapID) \
+                     .filter(Line.isPending == True).all()
+
+def pending_lines(rapID):
+    return Line.query.filter(Line.rapID == rapID) \
+                     .filter(Line.isPending == True).all()
 
 @app.route('/login')
 def login():

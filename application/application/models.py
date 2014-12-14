@@ -26,9 +26,11 @@ class Rap(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), unique=True)
     completed = db.Column(db.Boolean, default=False)
+    max_length = db.Column(db.Integer)
 
-    def __init__(self, title):
+    def __init__(self, title, max_length=20):
         self.title = title
+        self.max_length = max_length
 
     def __repr__(self):
         return '<Rap %r>' % (self.title)
