@@ -43,6 +43,7 @@ var rapView = {
             var current_val = parseInt($(constructor + " .down_count").text());
             $(constructor + " .up_count").text(current_val + 1);
           }
+        location.reload();
         }
     });
   }
