@@ -84,6 +84,8 @@ def upvote_ajax():
         if (current_user and line not in current_user.lines):
             line.upvotes += 1
             current_user.lines.append(line)
+            owner = User.query.filter_by(fb_id=line.userID).first()
+            owner.rapGodPoints += 1
             db.session.add(current_user)
             db.session.commit()
             total_votes = line.upvotes + line.downvotes
@@ -134,6 +136,8 @@ def select_best_line(line):
         for line in other_lines:
             db.session.delete(line[1])
         best_line.isPending = False
+        owner = User.query.filter_by(fb_id=best_line.userID).first()
+        owner.rapGodPoints += 10
         db.session.add(best_line)
         db.session.commit()
         # finishes the rap if it reaches the max length
