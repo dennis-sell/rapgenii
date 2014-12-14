@@ -45,7 +45,8 @@ def add_rap():
 
 @app.route('/add_line', methods=['POST'])
 def add_line():
-    index = 1 + 2*len(Line.query.filter(Line.rapID == request.form['rapID'], Line.isPending == False).all())
+    index = 1 + 2*len(Line.query.filter(Line.rapID == request.form['rapID'],
+                                        Line.isPending == False).all())
     rapID = request.form['rapID']
     try:
         l = Line(request.form['line1'], request.form['line2'],
@@ -65,13 +66,14 @@ def upvote_ajax():
         line = Line.query.get(lineID)
         line.upvotes += 1
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
-        if (current_user and line in current_user.lines):
+        if (current_user and line not in current_user.lines):
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
             return jsonify(lineID=lineID)
         else:
             return redirect(url_for('home'))
+
 
 @app.route('/line/_downvote', methods=['POST', 'GET'])
 def downvote_ajax():
@@ -80,7 +82,7 @@ def downvote_ajax():
         line = Line.query.get(lineID)
         line.downvotes += 1
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
-        if (line in current_user.lines):
+        if (current_user and line not in current_user.lines):
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
@@ -88,8 +90,38 @@ def downvote_ajax():
         else:
             return redirect(url_for('home'))
 
-def select_line():
-  pass
+
+@app.route('/add_line', methods=['POST'])
+def select_best_line():
+    if request.method == 'POST':
+        rapID = request.form['rapID']
+        rap = Rap.query.get(rapID)
+        pending_lines = pending_lines(rapID)
+        best_line, other_lines = quality_control.best_line(pending_lines)
+        if best_line:
+            best_line.isPending = False
+            db.session.remove(other_lines)
+            """ Can you remove a list? If not
+            for line in other_lines:
+                db.session.remove(line)
+            """
+            db.session.add(best_line)
+            # finishes the line if it reaches the max length
+            current_length = len(accepted_lines(rapID)) + 2
+            #Plus 2, because the lines that we just added haven't been placed in the database
+            if current_length >= rap.max_length:
+                rap.completed = True
+                db.session.add(rap)
+            db.session.commit()
+
+
+def accepted_lines(rapID):
+    return Line.query.filter(Line.rapID == rapID) \
+                     .filter(Line.isPending == True).all()
+
+def pending_lines(rapID):
+    return Line.query.filter(Line.rapID == rapID) \
+                     .filter(Line.isPending == True).all()
 
 @app.route('/login')
 def login():
