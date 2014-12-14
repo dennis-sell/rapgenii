@@ -8,10 +8,12 @@
     {% for line in accepted_lines %}
       <div class="line-container">
         <div class="votes" id="{{ line.id}}">
-          <span data-toggle="tooltip" data-placement="right" title="Added by {{ accepted_line_users[loop.index0][0] }}">
+          <a class="lyrics" data-toggle="popover" data-placement="right" title='<b>Added by 
+              <a href="/user/{{ accepted_line_users[loop.index0][1] }}">{{ accepted_line_users[loop.index0][0] }}<a></b>'
+                data-content='Upvotes: {{accepted_line_users[loop.index0][2]}} Downvotes: {{accepted_line_users[loop.index0][3]}}'>
             {{ line.line1 }}<br/>
             {{ line.line2 }}<br/>
-          </span>
+          </a>
         </div>
       </div>
     {% endfor %}

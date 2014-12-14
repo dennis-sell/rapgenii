@@ -15,6 +15,13 @@ html, body {
   cursor:pointer;
 }
 
+a.lyrics {
+  cursor:pointer;
+  text-decoration: none;
+}
+
+/* other */
+
 .extra {
   padding-top: 20px;
   padding-bottom: 40px;
@@ -47,10 +54,7 @@ html, body {
 .gray {
   color: gray;
 }
-<<<<<<< HEAD
-=======
 
 .red {
   color: red;
 }
->>>>>>> b4014a348a8996478dd58483da30815b2dcf88f2

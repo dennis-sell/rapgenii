@@ -3,6 +3,7 @@ var rapView = {
   'config' : {
     'upvote_button' : $('.up'),
     'downvote_button' : $('.down'),
+    'tooltip' : $('[data-toggle="popover"]')
   },
   'init' : function(config) {
     if (config && typeof(config) == 'object') {
@@ -10,11 +11,19 @@ var rapView = {
     }
     rapView.$upvote = rapView.config.upvote_button;
     rapView.$downvote = rapView.config.downvote_button;
+    rapView.$tooltip = rapView.config.tooltip
 
     var upvote = rapView.upvote(rapView.$upvote);
     var downvote = rapView.downvote(rapView.$downvote);
+    var tooltip = rapView.tooltip(rapView.$tooltip);
 
     rapView.initialized = true;
+  },
+  'tooltip' : function($tooltip) {
+    $tooltip.popover({html:true});
+    $tooltip.on('click', function(e) {
+      $tooltip.not(this).popover('hide');
+    });
   },
   'upvote' : function($upvote) {
     $upvote.click(function(){
