@@ -4,6 +4,7 @@ from application.models import *
 from flask import Flask, session, redirect, url_for, escape, request
 from flask_oauthlib.client import OAuth, OAuthException
 import random
+import quality_control
 from __init__ import facebook
 
 @app.route('/')
@@ -18,11 +19,18 @@ def home():
 @app.route('/raps/<int:rapID>')
 def show_rap(rapID):
     rap = Rap.query.filter(Rap.id == rapID).first()
-    lines = Line.query.filter(Line.rapID == rapID).all()
+    pending_lines = Line.query.filter(Line.rapID == rapID) \
+                               .filter(Line.isPending == True).all()
+    pending_lines = quality_control.sort_lines_by_wilson_score(pending_lines)
+
+    accepted_lines = Line.query.filter(Line.rapID == rapID) \
+                               .filter(Line.isPending == False) \
+                               .order_by(Line.lineIndex.asc()).all()
     user = None
     if 'user_id' in session:
         user = User.query.filter_by(fb_id=session['user_id']).first()
-    return render_template("info/rap.html", user=user, rap=rap, lines=lines)
+    return render_template("info/rap.html", user=user, rap=rap, pending_lines=pending_lines,
+                                                     accepted_lines=accepted_lines)
 
 @app.route('/add_rap', methods=['POST'])
 def add_rap():
@@ -41,7 +49,7 @@ def add_line():
     rapID = request.form['rapID']
     try:
         l = Line(request.form['line1'], request.form['line2'],
-            request.form['rapID'], index, escape(session['user_id']))
+            index, request.form['rapID'], escape(session['user_id']))
         db.session.add(l)
         db.session.commit()
         return redirect(url_for('show_rap', rapID = rapID))
@@ -79,6 +87,9 @@ def downvote_ajax():
             return jsonify(lineID=lineID)
         else:
             return redirect(url_for('home'))
+
+def select_line():
+  pass
 
 @app.route('/login')
 def login():
