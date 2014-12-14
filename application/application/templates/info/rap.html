@@ -11,7 +11,7 @@
         <h3>Accepted Lines</h3>
         {% for line in accepted_lines %}
           <div class="line-container">
-            <div class="votes" id="{{ line.id}} ">
+            <div class="votes" id="{{ line.id}}">
               {{ line.line1 }}<br/>
               {{ line.line2 }}<br/>
             </div>
@@ -22,13 +22,19 @@
         <h3>Pending Lines</h3>
         {% for line in pending_lines %}
           <div class="line-container">
-            <div class="votes" id="{{ line.id}} ">
+            <div class="votes" id="number{{line.id}}">
               {{ line.line1 }}<br/>
               {{ line.line2 }}<br/>
-              <em> Submitted by _____ ({{ line.upvotes }}, {{ line.downvotes }})</em>
+              <em> Submitted by <a href="/user/{{ line_users[loop.index0][1] }}">{{ line_users[loop.index0][0] }}</a> 
+              (<span class="up_count">{{ line.upvotes }}</span>, <span class="down_count">{{ line.downvotes }}</span>)</em>
               {% if user %}
+                {% if already_voted[loop.index0] %}
+              <i class="icon-arrow-up up voted"></i>
+              <i class="icon-arrow-down down voted"></i>
+                {% else %}
               <i class="icon-arrow-up up"></i>
               <i class="icon-arrow-down down"></i>
+                {% endif %}
               {% endif %}
               <br/>
             </div>

@@ -2,6 +2,15 @@ html, body {
   height: 100%;
 }
 
+/* rap page */
+
+.voted {
+  color: #dddddd;
+}
+.up:not(.voted), .down:not(.voted) {
+  cursor:pointer;
+}
+
 .extra {
   padding-top: 20px;
   padding-bottom: 40px;

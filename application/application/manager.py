@@ -22,15 +22,26 @@ def show_rap(rapID):
     pending_lines = Line.query.filter(Line.rapID == rapID) \
                                .filter(Line.isPending == True).all()
     pending_lines = quality_control.sort_lines_by_wilson_score(pending_lines)
-
+    already_voted = []
+    current_user = User.query.filter_by(fb_id=session['user_id']).first()
+    line_users = []
+    for i in pending_lines:
+        if (current_user and i in current_user.lines):
+            already_voted.append(True)
+        else:
+            already_voted.append(False)
+        user = User.query.filter_by(fb_id=i.userID).first()
+        line_users.append((user.full_name,user.id))
     accepted_lines = Line.query.filter(Line.rapID == rapID) \
                                .filter(Line.isPending == False) \
                                .order_by(Line.lineIndex.asc()).all()
     user = None
     if 'user_id' in session:
         user = User.query.filter_by(fb_id=session['user_id']).first()
-    return render_template("info/rap.html", user=user, rap=rap, pending_lines=pending_lines,
-                                                     accepted_lines=accepted_lines)
+    return render_template("info/rap.html", user=user, rap=rap,
+                           already_voted=already_voted,
+                           line_users=line_users, pending_lines=pending_lines,
+                           accepted_lines=accepted_lines)
 
 @app.route('/add_rap', methods=['POST'])
 def add_rap():
@@ -70,9 +81,9 @@ def upvote_ajax():
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
-            return jsonify(lineID=lineID)
+            return jsonify({"Success":True, "Line": lineID})
         else:
-            return redirect(url_for('home'))
+            return jsonify({"Success":False, "Line": lineID})
 
 
 @app.route('/line/_downvote', methods=['POST', 'GET'])
@@ -80,15 +91,16 @@ def downvote_ajax():
     if request.method == 'POST':
         lineID = request.form['lineID']
         line = Line.query.get(lineID)
+        print line
         line.downvotes += 1
         current_user = User.query.filter_by(fb_id=session['user_id']).first()
         if (current_user and line not in current_user.lines):
             current_user.lines.append(line)
             db.session.add(current_user)
             db.session.commit()
-            return jsonify(lineID=lineID)
+            return jsonify({"Success":True, "Line": lineID})
         else:
-            return redirect(url_for('home'))
+            return jsonify({"Success":False, "Line": lineID})
 
 
 @app.route('/add_line', methods=['POST'])
