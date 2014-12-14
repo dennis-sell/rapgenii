@@ -53,6 +53,9 @@ def add_rap():
     try:
         if session['user_id']:
             print request.form['rap_length']
+            if (not request.form['rap']) or (not request.form['rap_length']):
+                return jsonify(success=False)
+
             r = Rap(request.form['rap'], request.form['rap_length'])
             db.session.add(r)
             db.session.commit()
@@ -66,6 +69,9 @@ def add_line():
                                         Line.isPending == False).all())
     rapID = request.form['rapID']
     try:
+        if (not request.form['line1']) or (not request.form['line2']):
+            return jsonify(success=False)
+
         l = Line(request.form['line1'], request.form['line2'],
             index, request.form['rapID'], escape(session['user_id']))
         db.session.add(l)
