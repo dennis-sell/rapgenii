@@ -19,14 +19,42 @@ html, body {
   width: 70%;
 }
 
-/* home page */
 
-.rap-container{
-  width: 250px;
-  height: 100px;
-  background-color: #f2f2f2;
+.see-all {
+  text-align: right;
+  font-size: 1.2em;
+  padding-top: 20px;
+  padding-right: 20px;
 }
 
+
+/* home page */
+
+.rap-container {
+  width: 350px;
+  height: 150px;
+  background-color: #f2f2f2;
+  padding: 35px;
+}
+
+.rap-container a{
+  font-size: 2em;
+}
+
+.rap-container a:hover{
+  text-decoration: none;
+}
+
+.rap-progress {
+  padding-top: 15px;
+  text-align: right;
+  font-size: 1.4em;
+  color: #5e5e5e
+}
+
+.custom-modal-container {
+  padding: 30px;
+}
 
 
 /* rap page */

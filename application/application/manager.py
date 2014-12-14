@@ -149,8 +149,7 @@ def select_best_line(line):
         db.session.add(best_line)
         db.session.commit()
         # finishes the rap if it reaches the max length
-        current_length = len(accepted_lines(rapID))
-        if current_length >= rap.max_length:
+        if rap.progress >= rap.max_length:
             rap.completed = True
             db.session.add(rap)
             db.session.commit()
