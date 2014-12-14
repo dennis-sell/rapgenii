@@ -6,6 +6,7 @@ from flask_oauthlib.client import OAuth, OAuthException
 import random
 import quality_control
 from __init__ import facebook
+import urllib2
 
 @app.route('/')
 def home():
@@ -177,3 +178,11 @@ def logout():
     session.pop('oauth_token', None)
     session.pop('user_id', None)
     return redirect(url_for('home'))
+
+@app.route('/user/<int:userID>')
+def profile(userID):
+    user = User.query.filter_by(id=userID).first()
+    lines = Line.query.filter_by(userID=user.fb_id, isPending=False)
+    return render_template("info/profile.html", user=user, lines=lines)
+
+
