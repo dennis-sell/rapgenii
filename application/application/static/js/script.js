@@ -20,19 +20,20 @@ var rapView = {
     $upvote.click(function(){
       var line_id = $(this).parent().attr("id");
       console.log(line_id);
-      rapView.sendRequest(line_id, "upvote", $upvote); 
+      rapView.sendRequest(line_id, "upvote", this); 
     });
   },
   'downvote' : function($downvote) { 
     $downvote.click(function(){
       var line_id = $(this).parent().attr("id");
-      rapView.sendRequest(line_id, "downvote", $downvote); 
+      rapView.sendRequest(line_id, "downvote", this); 
     });
   },
-  'sendRequest' : function(line_id, vote_type, $vote) {
+  'sendRequest' : function(line_id, vote_type, vote_ele) {
     $.post( "/line/_" + vote_type, { 'lineID' : line_id } )
-      .done(function( data ) {
-        $vote.css({"display" : "none" });
+      .success(function( data ) {
+        $vote = $(vote_ele);
+        $vote.css({"color" : "red" });
     });
   }
 }
